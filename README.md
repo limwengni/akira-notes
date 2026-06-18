@@ -25,5 +25,12 @@ Don't try to do all three 5-day plans at the same time. That will become messy f
 ## Check-in
 
 <!-- CHECKIN_START -->
-> No check-ins yet. Push some notes!
+| | |
+|---|---|
+| Last check-in | 18 Jun 2026 at 07:45 UTC |
+| Total commits | 2 |
+
+**Files pushed:**
+- `.github/scripts/update_checkin.py`
+- `.github/workflows/checkin.yml`
 <!-- CHECKIN_END -->
