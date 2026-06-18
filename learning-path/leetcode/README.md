@@ -11,7 +11,7 @@
 |---|---|---|
 | Two Sum | Easy | [leetcode.com/problems/two-sum](https://leetcode.com/problems/two-sum) |
 | Contains Duplicate | Easy | [leetcode.com/problems/contains-duplicate](https://leetcode.com/problems/contains-duplicate) |
-| Maximum Subarray | Easy | [leetcode.com/problems/maximum-subarray](https://leetcode.com/problems/maximum-subarray) |
+| Remove Duplicates from Sorted Array | Easy | [leetcode.com/problems/remove-duplicates-from-sorted-array](https://leetcode.com/problems/remove-duplicates-from-sorted-array) |
 
 **Focus:** understand index access, loops, and when to use a second variable to track a running value.
 
