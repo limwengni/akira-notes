@@ -115,3 +115,47 @@ return nums.Length != new HashSet<int>(nums).Count;
 HashSet can't hold duplicates — if the count after inserting everything is less than the original length, duplicates existed.
 
 **Complexity:** O(n) — single loop, HashSet lookup is instant. Better than Two Sum's O(n²).
+
+---
+
+## Maximum Subarray
+
+**Problem:** Given an array of integers, find the contiguous subarray with the largest sum and return that sum.
+
+**My understanding:** Find which continuous chunk of the array gives the biggest sum. Subarray means no skipping — elements must be next to each other.
+
+**My first attempt (pseudocode):**
+```
+max = first element
+sum = 0
+
+for each element:
+    sum += element
+    if sum > max → max = sum
+    if sum < 0 → reset sum to 0
+
+return max
+```
+
+**What I learned:**
+- This is Kadane's Algorithm — if the running sum goes negative, it's dragging you down so discard it and start fresh
+- Update `max` before resetting `sum` — otherwise you lose the value
+- Return `max` not `sum` — sum gets reset to 0, max holds the real answer
+- Not like Two Sum — they want the sum itself, not indices
+
+**Final answer (C#):**
+```csharp
+int max = nums[0];
+int sum = 0;
+
+foreach (var num in nums)
+{
+    sum += num;
+    if (sum > max) max = sum;
+    if (sum < 0) sum = 0;
+}
+
+return max;
+```
+
+**Complexity:** O(n) — single loop, one pass through the array.
