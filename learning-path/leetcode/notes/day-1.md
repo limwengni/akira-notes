@@ -8,7 +8,8 @@
 |---|---|---|
 | Two Sum | Easy | [leetcode.com/problems/two-sum](https://leetcode.com/problems/two-sum) |
 | Contains Duplicate | Easy | [leetcode.com/problems/contains-duplicate](https://leetcode.com/problems/contains-duplicate) |
-| Maximum Subarray | Easy, but tricky | [leetcode.com/problems/maximum-subarray](https://leetcode.com/problems/maximum-subarray) |
+| Maximum Subarray | Medium | [leetcode.com/problems/maximum-subarray](https://leetcode.com/problems/maximum-subarray) |
+| Maximum Absolute Sum of Any Subarray | Medium | [leetcode.com/problems/maximum-absolute-sum-of-any-subarray](https://leetcode.com/problems/maximum-absolute-sum-of-any-subarray) |
 
 ---
 
@@ -159,3 +160,56 @@ return max;
 ```
 
 **Complexity:** O(n) — single loop, one pass through the array.
+
+---
+
+## Maximum Absolute Sum of Any Subarray
+
+**Problem:** Given an array of integers, return the maximum absolute sum of any subarray.
+
+**My understanding:** A subarray can have a positive or negative sum. The absolute value of the most negative subarray might be larger than the most positive one, so both need to be considered.
+
+**My first attempt (pseudocode):**
+```
+max = first element, min = first element
+sum = 0
+
+for each element:
+    sum += element
+    max = Math.Max(max, sum)
+    min = Math.Min(min, sum)
+    // reset gets complicated tracking both at once
+```
+
+**What I learned:**
+- Two separate passes is cleaner — one for max subarray sum, one for min subarray sum
+- Min pass is just Kadane's flipped: reset sum when `sum > 0` instead of `sum < 0`
+- Final answer is `Math.Max(Math.Abs(max), Math.Abs(min))`
+- Builds directly on Maximum Subarray (Kadane's Algorithm)
+
+**Final answer (C#):**
+```csharp
+// Find max subarray sum
+int max = nums[0];
+int sum1 = 0;
+
+foreach (int num in nums) {
+    sum1 += num;
+    max = Math.Max(max, sum1);
+    if (sum1 < 0) sum1 = 0;
+}
+
+// Find min subarray sum
+int min = nums[0];
+int sum2 = 0;
+
+foreach (int num in nums) {
+    sum2 += num;
+    min = Math.Min(min, sum2);
+    if (sum2 > 0) sum2 = 0;
+}
+
+return Math.Max(Math.Abs(max), Math.Abs(min));
+```
+
+**Complexity:** O(n) — two separate single passes through the array.
