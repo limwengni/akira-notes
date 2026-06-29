@@ -27,9 +27,10 @@ Don't try to do all three 5-day plans at the same time. That will become messy f
 <!-- CHECKIN_START -->
 | | |
 |---|---|
-| Last check-in | 27 Jun 2026 at 10:33 UTC |
+| Last check-in | 29 Jun 2026 at 11:55 UTC |
 | Total commits | 2 |
 
 **Files pushed:**
 - `learning-path/leetcode/notes/day-2.md`
+- `learning-path/leetcode/notes/day-3.md`
 <!-- CHECKIN_END -->
