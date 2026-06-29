@@ -157,3 +157,91 @@ public bool IsAnagram(string s, string t) {
 ```
 
 **Complexity:** O(n log n) time — sorting dominates. O(n) space — two char arrays.
+
+---
+
+**Method 2 — Frequency Count (26-size array, lowercase only):**
+
+**My understanding:** Use a fixed array of size 26 (one slot per letter a-z). Loop through `s` and increment, loop through `t` and decrement. The 2 loop version targets `t` specifically — if any count goes below 0, it means `t` has exceeded the count for that character, so `t` has extra. The 1 loop version increments and decrements simultaneously so counts can be positive or negative — `!= 0` catches both directions without knowing which string caused the mismatch.
+
+**Pseudocode:**
+```
+if s.Length != t.Length return false;
+
+int[] arr = new int[26];
+
+for int i = 0; i < s.Length; i++:
+    arr[s[i] - 'a']++;
+
+for int i = 0; i < t.Length; i++:
+    arr[t[i] - 'a']--;
+    if arr[t[i] - 'a'] < 0 return false;
+
+return true;
+```
+
+**What I learned:**
+- `s[i] - 'a'` maps a character to index 0-25 (`'a'` = 0, `'b'` = 1, `'z'` = 25)
+- `'a'` is ASCII 97, so `s[i] - 'a'` and `s[i] - 97` are the same thing — use `'a'` for readability
+- Finish processing all of `s` first, then decrement for `t` — this makes the early return valid
+- `< 0` catches when **t has extra characters** that s doesn't have enough of — only checks one direction
+- The length check at the top covers the other direction (s having extra characters), so `< 0` is sufficient
+- Both 26 and 256 array versions can be written with 2 loops (early return `< 0`) or 1 loop (check `!= 0` at end)
+
+**Final answer (C#):**
+```csharp
+public bool IsAnagram(string s, string t) {
+    if (s.Length != t.Length) return false;
+
+    int[] arr = new int[26];
+
+    for (int i = 0; i < s.Length; i++) {
+        arr[s[i] - 'a']++;
+    }
+
+    for (int i = 0; i < t.Length; i++) {
+        arr[t[i] - 'a']--;
+        if (arr[t[i] - 'a'] < 0) return false;
+    }
+
+    return true;
+}
+```
+
+**Complexity:** O(n) time — two passes. O(1) space — fixed array of size 26, never grows with input.
+
+---
+
+**Method 3 — Frequency Count (256-size array, full ASCII):**
+
+**My understanding:** Same idea as method 2 but use raw ASCII values as indexes directly — no need to subtract `'a'`. Array size 256 to cover all ASCII characters. Merge both loops into one, check all zeros at the end.
+
+**What I learned:**
+- Without `- 'a'`, raw ASCII values are used as indexes — need array size 256 to avoid out of bounds
+- 1 loop version: increment and decrement happen simultaneously, so counts can be positive or negative mid-loop
+- `!= 0` catches both directions — positive means s had extra, negative means t had extra
+- Can't do early return when using 1 loop — a temporary -1 mid-loop might get corrected later
+- 256 vs 26 array size makes no real difference in memory (fixed size either way, both O(1) space)
+- Use 26 when constraint says lowercase only, 256 for full ASCII, Dictionary for Unicode
+
+**Final answer (C#):**
+```csharp
+public bool IsAnagram(string s, string t) {
+    if (s.Length != t.Length) return false;
+
+    int[] counts = new int[256];
+
+    for (int i = 0; i < s.Length; i++) {
+        counts[s[i]]++;
+        counts[t[i]]--;
+    }
+
+    foreach (int count in counts) {
+        if (count != 0) return false;
+    }
+
+    return true;
+}
+```
+
+**Complexity:** O(n) time — one pass + one fixed 256 iteration. O(1) space — fixed array of size 256, never grows with input.
