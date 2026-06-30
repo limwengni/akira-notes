@@ -71,8 +71,75 @@
 
 ---
 
-## After the 5 days
-1-2 hours/day is solid. Do not rush into medium problems. Once you can solve most of the above without hints, move on to:
-- Sliding Window
-- Binary Search
-- Linked Lists
+---
+
+## Day 6 - Sliding Window
+**Goal:** learn to avoid nested loops when working with subarrays or substrings.
+
+| Problem | Difficulty | Link |
+|---|---|---|
+| Maximum Average Subarray I | Easy | [leetcode.com/problems/maximum-average-subarray-i](https://leetcode.com/problems/maximum-average-subarray-i) |
+| Longest Substring Without Repeating Characters | Medium | [leetcode.com/problems/longest-substring-without-repeating-characters](https://leetcode.com/problems/longest-substring-without-repeating-characters) |
+| Minimum Size Subarray Sum | Medium | [leetcode.com/problems/minimum-size-subarray-sum](https://leetcode.com/problems/minimum-size-subarray-sum) |
+
+**Focus:** a window slides across the array — expand the right side, shrink the left when a condition breaks. One loop, no nesting.
+
+---
+
+## Day 7 - Binary Search
+**Goal:** understand how to search in O(log n) instead of O(n).
+
+| Problem | Difficulty | Link |
+|---|---|---|
+| Binary Search | Easy | [leetcode.com/problems/binary-search](https://leetcode.com/problems/binary-search) |
+| Search Insert Position | Easy | [leetcode.com/problems/search-insert-position](https://leetcode.com/problems/search-insert-position) |
+| First Bad Version | Easy | [leetcode.com/problems/first-bad-version](https://leetcode.com/problems/first-bad-version) |
+
+**Focus:** always ask — can I cut the search space in half? Binary search only works on sorted data. The key is getting `left`, `right`, and `mid` right without off-by-one errors.
+
+---
+
+## Day 8 - Linked Lists
+**Goal:** get comfortable with pointer manipulation.
+
+| Problem | Difficulty | Link |
+|---|---|---|
+| Reverse Linked List | Easy | [leetcode.com/problems/reverse-linked-list](https://leetcode.com/problems/reverse-linked-list) |
+| Merge Two Sorted Lists | Easy | [leetcode.com/problems/merge-two-sorted-lists](https://leetcode.com/problems/merge-two-sorted-lists) |
+| Linked List Cycle | Easy | [leetcode.com/problems/linked-list-cycle](https://leetcode.com/problems/linked-list-cycle) |
+
+**Focus:** linked lists have no index access — you move by following `.next`. Draw it out on paper first. Linked List Cycle introduces the fast/slow pointer trick.
+
+---
+
+## Day 9 - Stacks and Queues
+**Goal:** learn when order of processing matters.
+
+| Problem | Difficulty | Link |
+|---|---|---|
+| Valid Parentheses | Easy | [leetcode.com/problems/valid-parentheses](https://leetcode.com/problems/valid-parentheses) |
+| Implement Queue using Stacks | Easy | [leetcode.com/problems/implement-queue-using-stacks](https://leetcode.com/problems/implement-queue-using-stacks) |
+| Min Stack | Medium | [leetcode.com/problems/min-stack](https://leetcode.com/problems/min-stack) |
+
+**Focus:** stack = last in first out. Queue = first in first out. Valid Parentheses is the classic stack problem — if you get that one, you understand stacks.
+
+---
+
+## Day 10 - Review + Mixed
+**Goal:** consolidate everything from Day 6-9, then try a step up.
+
+| Problem | Difficulty | Link |
+|---|---|---|
+| Product of Array Except Self | Medium | [leetcode.com/problems/product-of-array-except-self](https://leetcode.com/problems/product-of-array-except-self) |
+| 3Sum | Medium | [leetcode.com/problems/3sum](https://leetcode.com/problems/3sum) |
+| Re-attempt 1-2 problems you could not solve earlier | Review | - |
+
+**Focus:** Product of Array Except Self is a classic that combines prefix and suffix arrays. 3Sum extends Two Sum with sorting and two pointers — do not brute force it.
+
+---
+
+## After Day 10
+You are no longer a beginner. Move on to:
+- Trees and BFS/DFS
+- Dynamic Programming (proper)
+- Graphs
