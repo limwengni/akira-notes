@@ -89,3 +89,16 @@ return curr;
 ```
 
 **Complexity:** O(n) — single loop, constant space.
+
+---
+
+## What Tripped Me Up
+
+**Best Time to Buy and Sell Stock:**
+- First instinct was to apply Kadane's Algorithm but the mechanics are different — profit is `sell - buy`, not a running sum
+- Tracking `minPrice` is the key insight, not resetting to 0
+
+**Climbing Stairs:**
+- Looks like recursion but DP is better — recursion recalculates the same values repeatedly
+- Loop condition must be `i <= n` not `i < n`, otherwise you stop one step short
+- Just two variables needed (`prev` and `curr`), no array required
