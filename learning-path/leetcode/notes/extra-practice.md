@@ -99,6 +99,44 @@ return dict.Values.ToList();
 
 ---
 
+## Top K Frequent Elements
+
+**Problem:** Given an array of integers and a number `k`, return the `k` most frequent elements.
+
+**Example:**
+```
+Input:  nums = [1,1,1,2,2,3], k = 2
+Output: [1, 2]
+```
+
+**My understanding:** Count how many times each number appears, then return the top k numbers by frequency.
+
+**What tripped me up:**
+- `OrderByDescending` returns `KeyValuePair<int,int>` — need `.Select(x => x.Key)` to extract just the numbers
+- `.ToList()` returns `List<int>`, `.ToArray()` returns `int[]` — match whatever the method signature expects
+
+**Final answer (C#):**
+```csharp
+Dictionary<int, int> dict = new();
+
+for (int i = 0; i < nums.Length; i++)
+{
+    if (dict.ContainsKey(nums[i]))
+        dict[nums[i]]++;
+    else
+        dict[nums[i]] = 1;
+}
+
+return dict.OrderByDescending(x => x.Value)
+           .Take(k)
+           .Select(x => x.Key)
+           .ToArray();
+```
+
+**Complexity:** O(n log n) — sorting the dict dominates.
+
+---
+
 ## Pattern: Dictionary with List as Value
 
 Both problems use the same pattern:
