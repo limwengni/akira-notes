@@ -137,6 +137,70 @@ return dict.OrderByDescending(x => x.Value)
 
 ---
 
+## Permutation in String
+
+**Problem:** Given two strings `s1` and `s2`, return `true` if `s2` contains a permutation of `s1`.
+
+**Example:**
+```
+Input:  s1 = "ab", s2 = "eidbaooo"
+Output: true  // "ba" is a permutation of "ab"
+```
+
+**My understanding:** Check if any substring of `s2` with length `s1.Length` has the same character frequencies as `s1`.
+
+**Key insight:** Fixed window of size `s1.Length` slides across `s2`. Instead of sorting (slow), compare character frequency dicts. Add incoming char, remove outgoing char, compare after each slide.
+
+**What tripped me up:**
+- `dictS2[s2[right]]++` crashes if key doesn't exist — initialize to 0 first
+- `dictS2.Remove(s2[left])` removes the whole key — decrement first, only remove if count hits 0
+- Need to check first window match before the while loop — if `s1 == s2`, loop never runs
+- `left = right - s1.Length` must be calculated before using `left`
+
+**Final answer (C#):**
+```csharp
+Dictionary<char, int> dictS1 = new();
+Dictionary<char, int> dictS2 = new();
+int left = 0;
+int right = s1.Length;
+
+for (int i = 0; i < s1.Length; i++)
+{
+    if (dictS1.ContainsKey(s1[i])) dictS1[s1[i]]++;
+    else dictS1[s1[i]] = 1;
+}
+
+for (int i = 0; i < s1.Length; i++)
+{
+    if (dictS2.ContainsKey(s2[i])) dictS2[s2[i]]++;
+    else dictS2[s2[i]] = 1;
+}
+
+// check first window
+bool isMatch = dictS1.All(x => dictS2.GetValueOrDefault(x.Key, 0) == x.Value);
+if (isMatch) return true;
+
+while (right < s2.Length)
+{
+    if (!dictS2.ContainsKey(s2[right])) dictS2[s2[right]] = 0;
+    dictS2[s2[right]]++;
+    left = right - s1.Length;
+    dictS2[s2[left]]--;
+    if (dictS2[s2[left]] == 0) dictS2.Remove(s2[left]);
+
+    isMatch = dictS1.All(x => dictS2.GetValueOrDefault(x.Key, 0) == x.Value);
+    if (isMatch) return true;
+
+    right++;
+}
+
+return false;
+```
+
+**Complexity:** O(n) — single pass, dict comparison is O(26) = constant for lowercase letters.
+
+---
+
 ## Pattern: Dictionary with List as Value
 
 Both problems use the same pattern:
