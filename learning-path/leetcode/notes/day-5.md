@@ -78,6 +78,8 @@ int prev = 1;
 int curr = 2;
 int next;
 
+if (n <= 2) return n; // base cases: n=1 → 1 way, n=2 → 2 ways, both equal n
+
 for (int i = 3; i <= n; i++)
 {
     next = prev + curr;
@@ -102,3 +104,4 @@ return curr;
 - Looks like recursion but DP is better — recursion recalculates the same values repeatedly
 - Loop condition must be `i <= n` not `i < n`, otherwise you stop one step short
 - Just two variables needed (`prev` and `curr`), no array required
+- Edge case: without the `n <= 2` guard, `n = 1` skips the loop and wrongly returns `curr = 2`
