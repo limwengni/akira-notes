@@ -201,6 +201,53 @@ return false;
 
 ---
 
+## Fruit Into Baskets
+
+**Problem:** Given an array of fruit types, return the maximum number of fruits you can pick from a contiguous subarray with at most 2 distinct fruit types.
+
+**Example:**
+```
+Input:  fruits = [1, 2, 1, 2, 3]
+Output: 4  // [1, 2, 1, 2] has 2 types
+```
+
+**My understanding:** Longest subarray with at most 2 distinct values. Variable window — expand right, shrink left when more than 2 types in window.
+
+**What tripped me up:**
+- Dict tracks **counts** not just presence — need count to know when a type is fully gone from window
+- Shrink condition is `dict.Count > 2` not `dict[x] > 2` — count of distinct types, not count of one fruit
+- When shrinking, decrement `fruits[left]` not `fruits[right]`
+- `right` starts at 0, not `fruits.Length - 1`
+
+**Final answer (C#):**
+```csharp
+Dictionary<int, int> dict = new();
+int left = 0, right = 0, max = 0;
+
+while (right < fruits.Length)
+{
+    if (!dict.ContainsKey(fruits[right])) dict[fruits[right]] = 0;
+    dict[fruits[right]]++;
+
+    while (dict.Count > 2)
+    {
+        dict[fruits[left]]--;
+        if (dict[fruits[left]] == 0)
+            dict.Remove(fruits[left]);
+        left++;
+    }
+
+    max = Math.Max(max, right - left + 1);
+    right++;
+}
+
+return max;
+```
+
+**Complexity:** O(n) — each element added and removed at most once.
+
+---
+
 ## Pattern: Dictionary with List as Value
 
 Both problems use the same pattern:
