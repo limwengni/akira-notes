@@ -248,6 +248,61 @@ return max;
 
 ---
 
+## Rank Transform of an Array
+
+**Problem:** Replace each element with its rank — smallest distinct value is rank 1, next distinct value rank 2, etc. Equal values share the same rank.
+
+**Example:**
+```
+Input:  arr = [40, 10, 20, 30]
+Output: [4, 1, 2, 3]
+
+Input:  arr = [100, 100, 100]
+Output: [1, 1, 1]
+```
+
+**My understanding:** Rank = position in sorted order with duplicates collapsed. Two phases: sort a copy to learn the ranks (dict of value → rank), then walk the original order and look each one up.
+
+**What tripped me up:**
+- First idea was assigning ranks while scanning the original order and reshuffling when new numbers squeeze in — messy and O(n²). Sorting first makes ranks come for free
+- Must sort a **copy** (`arr.Clone()`) — phase 2 needs the original order, and `Array.Sort(arr)` has no undo
+- Duplicate rule: duplicates must not touch the rank counter — `rank++` goes **inside** the "not in dict yet" check, otherwise `[10,10,20]` ranks to `[1,1,3]` instead of `[1,1,2]`
+- `int[]` has no `.Add` — fixed size, assign by index. Size known upfront → array; unknown → `List<int>`
+
+**Final answer (C#):**
+```csharp
+public int[] ArrayRankTransform(int[] arr)
+{
+    int[] sorted = (int[])arr.Clone();
+    Array.Sort(sorted);
+
+    Dictionary<int, int> dict = new();
+    int rank = 1;
+
+    foreach (var sort in sorted)
+    {
+        if (!dict.ContainsKey(sort))
+        {
+            dict[sort] = rank;
+            rank++;
+        }
+    }
+
+    int[] res = new int[arr.Length];
+
+    for (int i = 0; i < arr.Length; i++)
+        res[i] = dict[arr[i]];
+
+    return res;
+}
+```
+
+**Complexity:** O(n log n) — the sort dominates; both loops are O(n). Empty array works for free: both loops run zero times, returns empty array.
+
+First problem combining three days' tools at once: arrays (Day 1) + sorting + hash map (Day 3).
+
+---
+
 ## Pattern: Dictionary with List as Value
 
 Both problems use the same pattern:
