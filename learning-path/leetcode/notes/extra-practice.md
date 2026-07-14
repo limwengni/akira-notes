@@ -303,6 +303,52 @@ First problem combining three days' tools at once: arrays (Day 1) + sorting + ha
 
 ---
 
+## Sequential Digits
+
+**Problem:** Return all numbers in range `[low, high]` whose digits are sequential (each digit is one more than the previous).
+
+**Example:**
+```
+Input:  low = 100, high = 300
+Output: [123, 234]
+```
+
+**My understanding:** All sequential digit numbers come from sliding a window across `"123456789"`. Window size = number of digits. Collect numbers that fall within `[low, high]`.
+
+**Key insight:** Fixed window sliding on the string `"123456789"`. Two loops — outer loop increases window size from `lowLen` to `highLen`, inner loop slides across the string.
+
+**What tripped me up:**
+- Inner loop condition is `i <= str.Length - lowLen` not `<` — otherwise last window is missed
+- `lowLen++` must be outside the for loop (after it ends), not inside it
+- `Substring(i, lowLen)` — second param is length, not end index
+
+**Final answer (C#):**
+```csharp
+List<int> res = new();
+int lowLen = low.ToString().Length;
+int highLen = high.ToString().Length;
+string str = "123456789";
+
+while (lowLen <= highLen)
+{
+    for (int i = 0; i <= str.Length - lowLen; i++)
+    {
+        string strNum = str.Substring(i, lowLen);
+        int num = int.Parse(strNum);
+
+        if (num >= low && num <= high)
+            res.Add(num);
+    }
+    lowLen++;
+}
+
+return res;
+```
+
+**Complexity:** O(1) — at most 36 sequential digit numbers exist (fixed search space).
+
+---
+
 ## Pattern: Dictionary with List as Value
 
 Both problems use the same pattern:
