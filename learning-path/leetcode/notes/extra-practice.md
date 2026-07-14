@@ -349,6 +349,94 @@ return res;
 
 ---
 
+## Longest Repeating Character Replacement
+
+**Problem:** Given a string `s` and integer `k`, find the length of the longest substring containing the same letter after replacing at most `k` characters.
+
+**Example:**
+```
+Input:  s = "AABABBA", k = 1
+Output: 4
+```
+
+**My understanding:** Find the longest window where replacements needed <= k. Replacements needed = window size - count of most frequent char.
+
+**Key insight:** Track frequency of each char using `int[26]`. Shrink when `(window size - maxFreq) > k`.
+
+**What tripped me up:**
+- Forgot to decrement freq when shrinking — used `++` instead of `--`
+- `int[26]` is cleaner than dict for letter-only problems — no ContainsKey needed
+
+**Final answer (C#):**
+```csharp
+int[] freq = new int[26];
+int maxFreq = 0, max = 0, left = 0, right = 0;
+
+while (right < s.Length)
+{
+    freq[s[right] - 'A']++;
+    maxFreq = Math.Max(maxFreq, freq[s[right] - 'A']);
+
+    while ((right - left + 1) - maxFreq > k)
+    {
+        freq[s[left] - 'A']--;
+        left++;
+    }
+
+    max = Math.Max(max, right - left + 1);
+    right++;
+}
+
+return max;
+```
+
+**Complexity:** O(n) — single pass.
+
+---
+
+## Max Consecutive Ones III
+
+**Problem:** Given a binary array and integer `k`, return the maximum consecutive 1s if you can flip at most `k` zeros.
+
+**Example:**
+```
+Input:  nums = [1,1,1,0,0,0,1,1,1,1,0], k = 2
+Output: 6
+```
+
+**My understanding:** Find the longest window with at most `k` zeros. No need to actually flip anything — just track zero count in window.
+
+**Key insight:** Simpler than character replacement — just count zeros, shrink when `zeroCount > k`.
+
+**What I learned:**
+- Don't modify the array — track conceptually
+- When shrinking, only decrement `zeroCount` if `nums[left] == 0`
+
+**Final answer (C#):**
+```csharp
+int left = 0, right = 0, max = 0, zeroCount = 0;
+
+while (right < nums.Length)
+{
+    if (nums[right] == 0) zeroCount++;
+
+    while (zeroCount > k)
+    {
+        if (nums[left] == 0) zeroCount--;
+        left++;
+    }
+
+    max = Math.Max(max, right - left + 1);
+    right++;
+}
+
+return max;
+```
+
+**Complexity:** O(n) — single pass.
+
+---
+
 ## Pattern: Dictionary with List as Value
 
 Both problems use the same pattern:
