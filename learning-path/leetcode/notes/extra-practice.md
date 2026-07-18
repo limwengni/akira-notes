@@ -349,6 +349,138 @@ return res;
 
 ---
 
+## Height Checker
+
+**Problem:** Count how many people are NOT standing where they'd be if the line were sorted by height.
+
+**Example:**
+```
+Input:  heights = [1, 1, 4, 2, 1, 3]
+Sorted:           [1, 1, 1, 2, 3, 4]
+Output: 3  // indexes 2, 4, 5 differ
+```
+
+**My understanding:** Compare the array against its sorted version, count positions that differ.
+
+**Lesson learned: READ THE CONSTRAINTS FIRST.** Heights are 1–100 — a small value range unlocks the counting trick. Constraints are part of the problem: small range → counting arrays, huge n → brute force will TLE, tiny n → brute force is fine.
+
+**Way 1 — sort a copy, compare:**
+```csharp
+public int HeightChecker(int[] heights)
+{
+    int[] sorted = (int[])heights.Clone();
+    Array.Sort(sorted);
+
+    int mismatch = 0;
+
+    for (int i = 0; i < heights.Length; i++)
+    {
+        if (heights[i] != sorted[i])
+            mismatch++;
+    }
+
+    return mismatch;
+}
+```
+O(n log n) — general tool, works for any values.
+
+**Way 2 — counting (no sort at all):**
+```csharp
+public int HeightChecker(int[] heights)
+{
+    int[] heightToFreq = new int[101]; // heights 1-100, index = height, slot 0 unused
+
+    foreach (var height in heights)
+        heightToFreq[height]++;       // tally: heightToFreq[1] = 3 means three people of height 1
+
+    int mismatch = 0;
+    int currHeight = 0;
+
+    for (int i = 0; i < heights.Length; i++)
+    {
+        // skip heights nobody has → currHeight lands on smallest height still in stock
+        while (heightToFreq[currHeight] == 0)
+            currHeight++;
+
+        // currHeight is what sorted[i] WOULD be — compare without ever sorting
+        if (currHeight != heights[i])
+            mismatch++;
+
+        heightToFreq[currHeight]--;   // one person of that height used up
+    }
+
+    return mismatch;
+}
+```
+O(n) — the tally IS the sorted array stored compactly ("three 1s, then a 2, ..."); phase 2 deals it out smallest-first. This is counting sort.
+
+**Key insights:**
+- Array size 101 so index 100 exists (`new int[101]` = indexes 0..100); slot 0 wasted on purpose — cheaper than `height-1` math everywhere
+- Array vs Dictionary as counter: dict has NO order — phase 2 needs smallest→largest, array indexes give that for free. Rule: small dense int keys → array as map; strings/sparse keys → dictionary. Same trick as the 26-letter anagram counter
+
+---
+
+## Find Target Indices After Sorting Array
+
+**Problem:** Return all indices where `target` sits in the sorted version of the array, in increasing order.
+
+**Example:**
+```
+Input:  nums = [1, 2, 5, 2, 3], target = 2
+Sorted: [1, 2, 2, 3, 5] → 2s at indices [1, 2]
+```
+
+**Way 1 — sort and scan:**
+```csharp
+public IList<int> TargetIndices(int[] nums, int target)
+{
+    Array.Sort(nums);   // no Clone needed! answer refers to the SORTED array,
+                        // original order is never needed again
+
+    List<int> res = new();
+
+    for (int i = 0; i < nums.Length; i++)
+    {
+        if (nums[i] == target)
+            res.Add(i);
+    }
+
+    return res;
+}
+```
+
+**Rule learned: clone before sorting only if the original order is still needed afterwards.** 1051/1331 answers referred to original positions → clone. Here the answer is defined on the sorted array → sort in place.
+
+**Way 2 — no sorting at all (O(n)):** in sorted order all targets form one consecutive block, so two counts determine the whole answer:
+- `lessCount` = elements < target → where the block **starts** (they'd fill the indices before it)
+- `equalCount` = elements == target → how **many** indices to output
+
+```csharp
+int lessCount = 0, equalCount = 0;
+
+foreach (var n in nums)
+{
+    if (n < target) lessCount++;
+    else if (n == target) equalCount++;
+}
+
+List<int> res = new();
+for (int i = 0; i < equalCount; i++)
+    res.Add(lessCount + i);   // block starts at lessCount, one index per match
+
+return res;
+```
+
+**Trace:** `[5, 1, 5, 3, 5]`, target 5 → lessCount = 2, equalCount = 3 → sorted would be `[1, 3, 5, 5, 5]` → output [2, 3, 4] ✓
+
+**What tripped me up:**
+- `res.Add(lessCount++)` also works but repurposes the variable (post-increment: emits current value, then bumps). `lessCount + i` keeps the meaning intact — clearer
+- Don't expect to invent the counting trick on the spot — it's a collected pattern. The tell: answer depends only on sorted *positions*, not on actually touching the sorted array
+
+**Complexity:** Way 1 O(n log n), Way 2 O(n) single pass + output loop.
+
+---
+
 ## Longest Repeating Character Replacement
 
 **Problem:** Given a string `s` and integer `k`, find the length of the longest substring containing the same letter after replacing at most `k` characters.

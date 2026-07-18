@@ -203,6 +203,45 @@ public ListNode MergeTwoLists(ListNode list1, ListNode list2)
 
 ---
 
+## Linked List Cycle
+
+**Problem:** Return true if the linked list has a cycle (some node's `next` points back to an earlier node).
+
+**Gotcha in the problem statement:** `pos` is NOT an input — it's just how the test harness builds the cycle. The function only gets `head`; the task is simply "does this list loop at all?"
+
+**My understanding:** Fast/slow racer from Middle of the Linked List, but the exit meaning changes. Straight list → fast falls off the end (null) → no cycle. Loopy list → nothing is ever null, but fast keeps gaining on slow until it lands on the same box → cycle.
+
+**Why fast can't jump OVER slow:** fast gains exactly 1 step per tick (slow moves 1 away, fast moves 2 closer). A gap that shrinks by exactly 1 counts down 3 → 2 → 1 → 0 — it can't skip 0. That's why 2x speed is used: at 3x the gap would shrink by 2 and could jump over.
+
+**My answer (C#):**
+```csharp
+public bool HasCycle(ListNode head)
+{
+    ListNode slow = head;
+    ListNode fast = head;
+
+    while (fast != null && fast.next != null)
+    {
+        slow = slow.next;
+        fast = fast.next.next;
+
+        if (slow == fast)       // same BOX (reference compare), not same value
+            return true;        // fast lapped slow → must be a loop
+    }
+
+    return false;               // fast fell off the end → straight list
+}
+```
+
+**Key details:**
+- Check `slow == fast` AFTER moving — they start on the same box, checking before moving would say every list has a cycle
+- `slow == fast` compares references (same box), not `.val`
+- Every list hits exactly one ending: meet → true, null → false
+
+**Complexity:** O(n) time, O(1) space.
+
+---
+
 ## Pattern: Build a Number Digit by Digit (Horner's Method)
 
 Turn a sequence of digits in any base into an actual number, one digit at a time:
