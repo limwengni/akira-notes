@@ -569,6 +569,72 @@ return max;
 
 ---
 
+## Find Greatest Common Divisor of Array
+
+**Problem:** Return the GCD of the smallest and largest numbers in the array.
+
+**Example:**
+```
+Input:  nums = [2, 5, 6, 9, 10]
+Output: 2  // gcd(2, 10)
+```
+
+**My understanding:** Find min and max in one scan, then GCD = biggest number that divides both. Brute force: test every candidate from 1 to min, keep the last (biggest) one that divides both.
+
+**The `%` rule that tripped me up (3 attempts!):** `a % b == 0` means "**b divides a** evenly" — candies % kids, remainder zero = shared perfectly. The thing doing the dividing goes on the RIGHT. My condition kept testing `mx % mn` — the loop variable `i` (the actual candidate) appeared nowhere in it.
+
+**Divisor table for gcd(4, 8):**
+```
+i | 4 % i | 8 % i | divides both?
+1 |   0   |   0   | yes
+2 |   0   |   0   | yes
+3 |   1   |   2   | no
+4 |   0   |   0   | yes   → last winner = GCD = 4
+```
+The table headers ARE the code: `mn % i == 0 && mx % i == 0`.
+
+**Final answer (C#):**
+```csharp
+public int FindGCD(int[] nums)
+{
+    int mn = nums[0], mx = 0;   // mx = 0 only safe because constraints say nums[i] >= 1
+
+    for (int i = 0; i < nums.Length; i++)
+    {
+        mn = Math.Min(mn, nums[i]);
+        mx = Math.Max(mx, nums[i]);
+    }
+
+    int gcd = 0;
+
+    for (int i = 1; i <= mn; i++)   // <= mn, not < — mn itself can be the GCD
+    {
+        if (mx % i == 0 && mn % i == 0) gcd = i;
+    }
+
+    return gcd;
+}
+```
+
+**Bonus — Euclid's algorithm (collected pattern, O(log) instead of O(n)):**
+```csharp
+while (b != 0)
+{
+    int temp = b;   // same save/overwrite/shift shuffle as linked list next/curr/prev
+    b = a % b;
+    a = temp;
+}
+return a;           // gcd(a, b) = gcd(b, a % b) until b hits 0
+```
+
+**Lessons learned:**
+- Read the condition OUT LOUD as a sentence before submitting — "if max is divisible by min" doesn't mention `i` at all; would have caught the bug instantly. Rushing kept the same bug alive 3 rounds
+- Loop range `[1, mn]` inclusive — stopping at `< mn` misses the case where min divides max
+
+**Complexity:** O(n + mn) brute force; O(n + log(mn)) with Euclid.
+
+---
+
 ## Pattern: Dictionary with List as Value
 
 Both problems use the same pattern:
