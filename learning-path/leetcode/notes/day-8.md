@@ -242,6 +242,29 @@ public bool HasCycle(ListNode head)
 
 ---
 
+## Drill Log — blank-editor rewrites (2026-07-19)
+
+Rewrote 206 + 21 cold, no peeking. Both re-submitted green.
+
+**206 Reverse:** correct first try, re-derived the logic instead of recalling it (flip → chain breaks → save first → step). Owned.
+
+**21 Merge:** concepts survived (compare, keychain, leftover dump) but mechanics slipped — took 4 rounds:
+- Declared `tail` twice instead of `dummy` + `tail`
+- Wrote `tail = list1` (move) instead of `tail.next = list1` (attach)
+- Returned `tail`, then `dummy`, before landing on `dummy.next`
+
+→ needs one more cold rep in a day or two.
+
+**The distinction that matters (source of most list bugs):**
+- `x.next = y` → **attach**: draws an arrow between boxes
+- `x = y` → **move**: just repoints my hand, connects nothing
+
+**Also learned:**
+- `new ListNode()` works because the constructor has default params (`val=0, next=null`); dummy's value is irrelevant — any value, still `return dummy.next`
+- Value ≠ box: wiring (`.next`, returns, node `==`) is about boxes, never the values inside
+
+---
+
 ## Pattern: Build a Number Digit by Digit (Horner's Method)
 
 Turn a sequence of digits in any base into an actual number, one digit at a time:
