@@ -635,6 +635,48 @@ return a;           // gcd(a, b) = gcd(b, a % b) until b hits 0
 
 ---
 
+## Maximum Product of Three Numbers
+
+**Problem:** Return the maximum product of any three numbers in the array.
+
+**Example:**
+```
+Input:  nums = [-10, -10, 1, 2, 3]
+Output: 300   // (-10) * (-10) * 3, NOT 1 * 2 * 3 = 6
+```
+
+**My understanding:** Two candidates only — sort first, then it's four index reads:
+1. Three largest: `arr[n-1] * arr[n-2] * arr[n-3]`
+2. Two smallest (most negative) × largest: `arr[0] * arr[1] * arr[n-1]`
+
+Return the bigger one. That's it.
+
+**Why two negatives beat three positives:** negative × negative = big positive, then × the largest positive = even bigger. Always check if the two most-negative numbers produce a better product than the top three.
+
+**Why `arr[n-1]` (not `arr[n-2]`) as the third multiplier in p2:** you want to maximize, so always pick the biggest available multiplier — that's the last element after sorting.
+
+**What tripped me up:**
+- First instinct was two pointers — doesn't fit here, no target to home in on, just two specific combinations to compare
+- Easy to forget negative × negative = positive; "take the three largest" is wrong when the array has large negatives
+
+**Final answer (C#):**
+```csharp
+public int MaximumProduct(int[] nums)
+{
+    Array.Sort(nums);
+    int n = nums.Length;
+
+    int p1 = nums[n-1] * nums[n-2] * nums[n-3];   // three largest
+    int p2 = nums[0] * nums[1] * nums[n-1];         // two most-negative × largest
+
+    return Math.Max(p1, p2);
+}
+```
+
+**Complexity:** O(n log n) — sort dominates.
+
+---
+
 ## Pattern: Dictionary with List as Value
 
 Both problems use the same pattern:
