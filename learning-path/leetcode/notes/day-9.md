@@ -9,6 +9,10 @@
 | Valid Parentheses | Easy | [leetcode.com/problems/valid-parentheses](https://leetcode.com/problems/valid-parentheses) |
 | Implement Queue using Stacks | Easy | [leetcode.com/problems/implement-queue-using-stacks](https://leetcode.com/problems/implement-queue-using-stacks) |
 | Min Stack | Medium | [leetcode.com/problems/min-stack](https://leetcode.com/problems/min-stack) |
+| Daily Temperatures | Medium | [leetcode.com/problems/daily-temperatures](https://leetcode.com/problems/daily-temperatures) |
+| Next Greater Element I | Easy | [leetcode.com/problems/next-greater-element-i](https://leetcode.com/problems/next-greater-element-i) |
+| Baseball Game | Easy | [leetcode.com/problems/baseball-game](https://leetcode.com/problems/baseball-game) |
+| Remove All Adjacent Duplicates in String | Easy | [leetcode.com/problems/remove-all-adjacent-duplicates-in-string](https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string) |
 
 ---
 
@@ -444,7 +448,7 @@ c → push          [c]
 a → push          [c, a]
 ```
 
-The stack now contains the right characters, but popping returns them in reverse order: `a`, then `c`. Put the popped characters into an array and reverse the array before creating the final string.
+The stack now contains the right characters, but popping returns them in reverse order: `a`, then `c`. Instead of filling an array forward and calling `Array.Reverse()`, fill the array from the last index toward index `0`.
 
 **What tripped me up:** used `stack.Count` as the loop boundary while also popping from the stack:
 
@@ -453,14 +457,23 @@ for (int i = 0; i < stack.Count; i++) // wrong: Count shrinks after every Pop
     result[i] = stack.Pop();
 ```
 
-If the stack starts with four items, after two pops both `i` and `stack.Count` become `2`, so the loop stops halfway. Create the result array after the stack-processing loop, then use its fixed length:
+If the stack starts with four items, after two pops both `i` and `stack.Count` become `2`, so the loop stops halfway. Create the result array after the stack-processing loop, then use its fixed length. Fill it backward so the stack's reversed pop order lands in the correct positions:
 
 ```csharp
 char[] result = new char[stack.Count];
 
-for (int i = 0; i < result.Length; i++)
+for (int i = result.Length - 1; i >= 0; i--)
     result[i] = stack.Pop();
 ```
+
+```text
+Stack bottom → [c, a] ← top
+i = 1 → pop 'a' → result[1] = 'a'
+i = 0 → pop 'c' → result[0] = 'c'
+Result: "ca"
+```
+
+This removes the need for a separate `Array.Reverse(result)` pass.
 
 The array must be created **after** processing the string. Before the loop, `stack.Count` is `0`; afterward, it is exactly the number of surviving characters.
 
@@ -486,10 +499,8 @@ public class Solution
 
         char[] result = new char[stack.Count];
 
-        for (int i = 0; i < result.Length; i++)
+        for (int i = result.Length - 1; i >= 0; i--)
             result[i] = stack.Pop();
-
-        Array.Reverse(result);
 
         return new string(result);
     }
