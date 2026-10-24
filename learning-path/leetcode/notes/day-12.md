@@ -112,3 +112,78 @@ public bool IsSameTree(TreeNode p, TreeNode q) {
 ```
 
 **Complexity:** O(n) — visits every pair of nodes once.
+
+---
+
+## Diameter of Binary Tree
+
+**Problem:** Return the length of the longest path between any two nodes (measured in edges). The path does not have to pass through the root.
+
+**My understanding:** At any node, the longest path passing through it = left depth + right depth. Track the maximum of this across all nodes. The recursive function returns depth (like MaxDepth) and updates the diameter as a side effect along the way.
+
+**Key insight:** Two separate jobs — the recursive function returns depth; the class-level variable tracks the best diameter seen so far. Almost identical to MaxDepth with one extra line.
+
+**Final answer (C#):**
+```csharp
+public class Solution {
+    int maxDiameter = 0;
+
+    public int Depth(TreeNode root) {
+        if (root == null) return 0;
+
+        int left  = Depth(root.left);
+        int right = Depth(root.right);
+
+        maxDiameter = Math.Max(maxDiameter, left + right);  // update diameter at this node
+
+        return Math.Max(left, right) + 1;                   // return depth as usual
+    }
+
+    public int DiameterOfBinaryTree(TreeNode root) {
+        Depth(root);
+        return maxDiameter;
+    }
+}
+```
+
+**Pattern:** helper function + class-level variable. The helper does the recursion and updates as a side effect; the main method kicks it off and returns the stored result. Reusable pattern for many tree problems.
+
+**Complexity:** O(n) — visits every node once.
+
+---
+
+## Balanced Binary Tree
+
+**Problem:** Return true if the tree is height-balanced — for every node, the height difference between left and right subtrees is at most 1, and both subtrees are also balanced.
+
+**My understanding:** Need heights to check balance, so use a depth helper. Trick: return `-1` as a poison value meaning "unbalanced" instead of a separate flag. If anything below is unbalanced, propagate `-1` up immediately — no point checking further.
+
+**The -1 poison pattern:**
+- Balanced subtree → return its height (normal number)
+- Unbalanced subtree → return -1 (bubbles up through all callers)
+- Main function just checks `helper(root) != -1`
+
+**What tripped me up:**
+- First instinct was `return false` for null — wrong, empty tree is balanced → `return true`. In the helper, null = height 0
+- Needed the depth helper pattern from Diameter, but here `-1` replaces the class-level variable
+
+**Final answer (C#):**
+```csharp
+public int Depth(TreeNode root) {
+    if (root == null) return 0;
+
+    int left  = Depth(root.left);
+    int right = Depth(root.right);
+
+    if (left == -1 || right == -1) return -1;       // already unbalanced below
+    if (Math.Abs(left - right) > 1) return -1;      // unbalanced at this node
+
+    return Math.Max(left, right) + 1;               // balanced, return height
+}
+
+public bool IsBalanced(TreeNode root) {
+    return Depth(root) != -1;
+}
+```
+
+**Complexity:** O(n) — visits every node once, short-circuits as soon as imbalance is found.
