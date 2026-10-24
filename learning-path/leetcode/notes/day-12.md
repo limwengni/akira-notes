@@ -84,3 +84,31 @@ public TreeNode InvertTree(TreeNode root) {
 ```
 
 **Complexity:** O(n) — visits every node once.
+
+---
+
+## Same Tree
+
+**Problem:** Given two binary trees, return true if they are identical — same structure and same values at every node.
+
+**My understanding:** At each pair of nodes: both null = same, one null = different, values differ = different, else recurse on both sides.
+
+**What tripped me up:**
+- Forgot the both-null base case first — without it, hitting two nulls would fall through and crash on `.left` of a null node
+- Forgot to compare `p.val != q.val` — same structure but different numbers would wrongly return true
+- Added redundant `if (p != null && q != null)` at the end — unnecessary because all null cases already returned above; by that point both are guaranteed non-null
+
+**Final answer (C#):**
+```csharp
+public bool IsSameTree(TreeNode p, TreeNode q) {
+    if (p == null && q == null) return true;   // both ended → same
+    if (p != null && q == null) return false;  // structure mismatch
+    if (p == null && q != null) return false;  // structure mismatch
+    if (p.val != q.val) return false;          // value mismatch
+
+    return IsSameTree(p.left, q.left) &&
+           IsSameTree(p.right, q.right);
+}
+```
+
+**Complexity:** O(n) — visits every pair of nodes once.
