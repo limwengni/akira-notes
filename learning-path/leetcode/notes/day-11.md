@@ -1,4 +1,4 @@
-# Day 11 Notes - Needs Revisit
+# Day 11 Notes
 
 ## Minimum Swaps to Sort by Digit Sum
 
@@ -6,48 +6,102 @@
 
 **Difficulty:** Medium
 
-**Status:** Needs revisit
-
-This problem combines several ideas and felt difficult. The digit-sum part is understood; the harder part is building the target order and counting the minimum swaps.
+**Status:** ✅ Solved
 
 ### Main pipeline
 
 ```text
-1. Calculate the digit sum for every number.
-2. Build the final target order by sorting numbers by:
-   - smaller digit sum first
-   - smaller number first when digit sums are equal
-3. Compare the current nums array with the target array.
-4. Use indexMap[number] to find where the desired number currently is.
-5. Swap it into the correct position.
-6. Update indexMap after every swap.
+1. Calculate the digit sum for every number → sumMap
+2. Record each number's original index → indexMap (same loop)
+3. Build target = sorted copy of nums by: smaller digit sum first, tie → smaller number
+4. Swap loop: for each i, if nums[i] != target[i]:
+   - find target[i]'s current position via indexMap
+   - swap nums[i] with nums[oldIndex]
+   - update indexMap for BOTH swapped numbers
+   - swaps++
 ```
 
 ### Important meanings
 
 ```text
-sums[number]    = digit sum of that number
-target[i]       = number that should finally be at index i
-indexMap[number] = number's current index in nums
+sumMap[number]   = digit sum of that number
+target[i]        = number that should finally be at index i
+indexMap[number] = number's CURRENT index in nums (updates after every swap)
 ```
 
-`indexMap` starts with the original indices, but after swaps it must be updated to store the numbers' current indices.
+### What tripped me up
 
-For example:
+- Modified `nums[i]` directly in the digit sum loop → by the time `sumMap[nums[i]] = sum` ran, `nums[i]` was already 0. Fix: use a temp variable `n = nums[i]` and divide `n`, never `nums[i]`
+- `sum` must be declared INSIDE the loop — declared outside means it accumulates across all numbers instead of resetting per number
+- Classic swap bug: wrote `nums[oldIndex] = nums[i]` after already overwriting `nums[i]` → used `temp` but forgot to place it. Always: save → overwrite → restore from temp
+- indexMap update: use `temp` (the displaced number's value) as the key for `oldIndex`, not `nums[oldIndex]` — clearer and avoids reading a value that just changed
+
+### Trace example
 
 ```text
-nums   = [37, 100]
-sums   = { 37: 10, 100: 1 }
-target = [100, 37]
+nums   = [37, 100, 50]
+target = [100, 50, 37]
+indexMap = {37:0, 100:1, 50:2}
+
+i=0: target[0]=100, indexMap[100]=1 → swap indices 0,1
+     nums=[100,37,50], indexMap={100:0, 37:1, 50:2}, swaps=1
+
+i=1: target[1]=50, indexMap[50]=2 → swap indices 1,2
+     nums=[100,50,37], indexMap={100:0, 50:1, 37:2}, swaps=2
+
+i=2: nums[2]==target[2]==37 → skip
+Result: 2 swaps
 ```
 
-At index `0`, the target says `100` belongs there. `indexMap[100]` tells us that `100` is currently at index `1`, so we swap indices `0` and `1`. The answer is one swap.
+### Final answer (C#)
 
-### Why it is difficult
+```csharp
+public class Solution {
+    public int MinSwaps(int[] nums) {
+        Dictionary<int, int> sumMap = new();
+        Dictionary<int, int> indexMap = new();
 
-The problem is not just digit sums. It combines digit extraction, custom sorting, dictionaries, array mutation, and minimum-swap reasoning. Revisit this after practising easier sorting and dictionary problems.
+        for (int i = 0; i < nums.Length; i++) {
+            int sum = 0;        // reset for each number
+            int n = nums[i];    // don't touch nums[i]
 
-**Complexity:** O(n log n) time because of sorting; O(n) extra space for the digit-sum dictionary, target list, and index dictionary.
+            while (n > 0) {
+                sum += n % 10;
+                n /= 10;
+            }
+
+            sumMap[nums[i]] = sum;
+            indexMap[nums[i]] = i;  // original position
+        }
+
+        int[] target = [.. nums];
+        Array.Sort(target, (a, b) => sumMap[a] != sumMap[b]
+            ? sumMap[a].CompareTo(sumMap[b])
+            : a.CompareTo(b));
+
+        int swaps = 0;
+        for (int i = 0; i < nums.Length; i++) {
+            if (nums[i] == target[i]) continue;
+
+            int oldIndex = indexMap[target[i]];   // where target[i] currently lives
+            int temp = nums[i];
+            nums[i] = nums[oldIndex];             // bring target[i] here
+            nums[oldIndex] = temp;                // displace current number
+
+            indexMap[nums[i]] = i;                // target[i] now at i
+            indexMap[temp] = oldIndex;            // displaced number now at oldIndex
+
+            swaps++;
+        }
+
+        return swaps;
+    }
+}
+```
+
+**Complexity:** O(n log n) — sort dominates. O(n) extra space for the two dictionaries and target array.
+
+**Note:** requires distinct numbers — duplicate keys would break both dictionaries. Constraints guarantee `nums` consists of distinct positive integers.
 
 ---
 
