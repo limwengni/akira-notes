@@ -12,6 +12,7 @@
 | Diameter of Binary Tree | Easy | [leetcode.com/problems/diameter-of-binary-tree](https://leetcode.com/problems/diameter-of-binary-tree) |
 | Balanced Binary Tree | Easy | [leetcode.com/problems/balanced-binary-tree](https://leetcode.com/problems/balanced-binary-tree) |
 | Path Sum | Easy | [leetcode.com/problems/path-sum](https://leetcode.com/problems/path-sum) |
+| Subtree of Another Tree | Easy | [leetcode.com/problems/subtree-of-another-tree](https://leetcode.com/problems/subtree-of-another-tree) |
 
 ---
 
@@ -225,3 +226,42 @@ public bool HasPathSum(TreeNode root, int targetSum) {
 ```
 
 **Complexity:** O(n) — visits every node once in the worst case.
+
+---
+
+## Subtree of Another Tree
+
+**Problem:** Given `root` and `subRoot`, return true if `subRoot` appears somewhere inside `root` as an exact match (same structure and same values).
+
+**My understanding:** Walk every node in `root`. At each node, check if the tree rooted there is identical to `subRoot` — using `IsSameTree`. If any node matches, return true.
+
+**Key insight:** Two functions working together:
+- `IsSameTree` — checks if two trees are fully identical (reused from Same Tree)
+- `IsSubtree` — traverses every node in `root` and calls `IsSameTree` at each one
+
+**What tripped me up:**
+- First wrote `IsSubtree(root, subRoot)` as the first part of the return — infinite loop, same inputs never change. Fix: that first call should be `IsSameTree(root, subRoot)` to check the current node
+- The two null checks at the top (`root == null && subRoot == null`, `root == null && subRoot != null`) are already handled inside `IsSameTree` — can simplify to just `if (root == null) return false`
+
+**Final answer (C#):**
+```csharp
+public bool IsSameTree(TreeNode p, TreeNode q) {
+    if (p == null && q == null) return true;
+    if (p != null && q == null) return false;
+    if (p == null && q != null) return false;
+    if (p.val != q.val) return false;
+
+    return IsSameTree(p.left, q.left) &&
+           IsSameTree(p.right, q.right);
+}
+
+public bool IsSubtree(TreeNode root, TreeNode subRoot) {
+    if (root == null) return false;
+
+    return IsSameTree(root, subRoot)
+        || IsSubtree(root.left, subRoot)
+        || IsSubtree(root.right, subRoot);
+}
+```
+
+**Complexity:** O(n × m) — for each of the n nodes in root, IsSameTree runs up to m steps (size of subRoot).
