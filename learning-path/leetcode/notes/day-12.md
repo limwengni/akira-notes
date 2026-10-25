@@ -8,7 +8,10 @@
 |---|---|---|
 | Maximum Depth of Binary Tree | Easy | [leetcode.com/problems/maximum-depth-of-binary-tree](https://leetcode.com/problems/maximum-depth-of-binary-tree) |
 | Invert Binary Tree | Easy | [leetcode.com/problems/invert-binary-tree](https://leetcode.com/problems/invert-binary-tree) |
+| Same Tree | Easy | [leetcode.com/problems/same-tree](https://leetcode.com/problems/same-tree) |
 | Diameter of Binary Tree | Easy | [leetcode.com/problems/diameter-of-binary-tree](https://leetcode.com/problems/diameter-of-binary-tree) |
+| Balanced Binary Tree | Easy | [leetcode.com/problems/balanced-binary-tree](https://leetcode.com/problems/balanced-binary-tree) |
+| Path Sum | Easy | [leetcode.com/problems/path-sum](https://leetcode.com/problems/path-sum) |
 
 ---
 
