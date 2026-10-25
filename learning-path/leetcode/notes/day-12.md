@@ -187,3 +187,38 @@ public bool IsBalanced(TreeNode root) {
 ```
 
 **Complexity:** O(n) — visits every node once, short-circuits as soon as imbalance is found.
+
+---
+
+## Path Sum
+
+**Problem:** Return true if there exists a root-to-leaf path whose values sum to `targetSum`.
+
+**Key word: leaf** — the path must end at a node with no left AND no right child. A node with one child is not a leaf.
+
+**My understanding:** Subtract each node's value from targetSum as you go down. At a leaf, if the remaining target is 0 — found the path. Recursion handles the traversal.
+
+**What tripped me up:**
+- Checked `targetSum == 0` at any node instead of only at a leaf — bug: a non-leaf node could hit 0 early and return true wrongly (e.g. tree `5→3`, target 5: would return true at node 5 before reaching leaf 3)
+- Fix: check `root.left == null && root.right == null` before checking targetSum
+
+**How null check and leaf check work together:**
+- Leaf check → stops at the right place, gives the answer
+- Null check (`root == null`) → safety net when recursing past a leaf's null children; also handles empty tree
+
+**Final answer (C#):**
+```csharp
+public bool HasPathSum(TreeNode root, int targetSum) {
+    if (root == null) return false;
+
+    targetSum -= root.val;
+
+    // only check target at a leaf (no children)
+    if (root.left == null && root.right == null) return targetSum == 0;
+
+    // not a leaf yet — try both sides
+    return HasPathSum(root.left, targetSum) || HasPathSum(root.right, targetSum);
+}
+```
+
+**Complexity:** O(n) — visits every node once in the worst case.
