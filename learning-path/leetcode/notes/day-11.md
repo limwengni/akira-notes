@@ -1,5 +1,12 @@
 # Day 11 Notes
 
+| Problem | Difficulty | Link |
+|---|---|---|
+| Minimum Swaps to Sort by Digit Sum | Medium | [leetcode.com/problems/minimum-swaps-to-sort-by-digit-sum](https://leetcode.com/problems/minimum-swaps-to-sort-by-digit-sum) |
+| Find the N-th Value After K Seconds | Easy | [leetcode.com/problems/find-the-n-th-value-after-k-seconds](https://leetcode.com/problems/find-the-n-th-value-after-k-seconds) |
+
+---
+
 ## Minimum Swaps to Sort by Digit Sum
 
 **Problem:** [LeetCode 3551 - Minimum Swaps to Sort by Digit Sum](https://leetcode.com/problems/minimum-swaps-to-sort-by-digit-sum/)
