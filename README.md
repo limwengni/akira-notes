@@ -37,9 +37,13 @@ Don't try to do all three 5-day plans at the same time. That will become messy f
 <!-- CHECKIN_START -->
 | | |
 |---|---|
-| Last check-in | 25 Oct 2026 at 06:23 UTC |
+| Last check-in | 04 Nov 2026 at 02:27 UTC |
 | Total commits | 2 |
 
 **Files pushed:**
-- `learning-path/leetcode/notes/day-12.md`
+- `learning-path/ROADMAP.md`
+- `learning-path/graphs-routing-gnns-traffic/01-graph-foundations.md`
+- `learning-path/graphs-routing-gnns-traffic/02-bfs-and-dfs.md`
+- `learning-path/graphs-routing-gnns-traffic/03-shortest-paths.md`
+- `learning-path/graphs-routing-gnns-traffic/04-graph-neural-networks.md`
 <!-- CHECKIN_END -->
