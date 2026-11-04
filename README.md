@@ -6,6 +6,16 @@ Personal learning notes covering programming topics — AI/LLM, machine learning
 
 ---
 
+## Learning Paths
+
+Explore the [learning paths index](learning-path/README.md) and [roadmap](learning-path/ROADMAP.md) for beginner-friendly lessons, Python examples, exercises, mini-projects, and progress trackers.
+
+- [Graph Theory, shortest paths, GNNs and traffic prediction](learning-path/graphs-routing-gnns-traffic/README.md)
+- [LangChain, LangGraph, RAG, tool calling and AI agents](learning-path/langchain-langgraph-agents/README.md)
+- [PyTorch, neural networks and deep learning](learning-path/pytorch-deep-learning/README.md)
+
+---
+
 ## Learning Schedule
 
 Don't try to do all three 5-day plans at the same time. That will become messy fast.
